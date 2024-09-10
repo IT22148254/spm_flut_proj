@@ -11,5 +11,5 @@ final getit = GetIt.instance;
   asExtension: true, 
 )
 
-void configureDependency(String env) => getit.init();
+void configureDependency() => getit.init();
 

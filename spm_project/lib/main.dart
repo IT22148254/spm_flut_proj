@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:spm_project/core/pages/home_page.dart';
+import 'package:spm_project/di/injectable.dart';
+import 'package:go_router/go_router.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  configureDependency();
   runApp(const MyApp());
 }
 
@@ -11,9 +14,11 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final GoRouter router = getit<GoRouter>();
+
+    return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      home: Homepage(),
+      routerConfig: router,
     );
   }
 }
