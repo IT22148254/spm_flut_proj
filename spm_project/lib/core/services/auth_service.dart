@@ -66,6 +66,38 @@ class FirebaseAuthService implements AuthService {
     }
   }
 
+  Future<void> registerUser(
+      String email, String password, String displayName) async {
+    try {
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      User? user = userCredential.user;
+      if (user != null) {
+        await user.updateProfile(displayName: displayName);
+        await user.reload();
+        user = _firebaseAuth.currentUser;
+      }
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case 'email-already-in-use':
+          _logger.e("The email address is already in use by another account.");
+          break;
+        case 'invalid-email':
+          _logger.e("The email address is not valid.");
+          break;
+        case 'operation-not-allowed':
+          _logger.e("Email/password accounts are not enabled.");
+          break;
+        case 'weak-password':
+          _logger.e("The password is too weak.");
+          break;
+        default:
+          _logger.e("Error creating user: $e");
+      }
+    }
+  }
+
   @override
   Future<void> signOut() async {
     try {

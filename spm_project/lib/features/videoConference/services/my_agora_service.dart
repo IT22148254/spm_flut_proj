@@ -36,10 +36,14 @@ class MyAgoraServiceImpl implements MyAgoraService {
       _logger.i('Agora client ended call');
 
       if (context.mounted) {
-        context.go('/');
+        context.go('/rooms');
       }
     } catch (e) {
       _logger.e('Error ending call $e');
     }
+  }
+
+  AgoraClient getAgoraClient(){
+    return _client;
   }
 }

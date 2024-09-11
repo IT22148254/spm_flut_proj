@@ -4,9 +4,10 @@ import 'package:spm_project/features/videoConference/screens/video_conf_page.dar
 
 final conferenceRoutes = [
   GoRoute(
-    path: '/',
+    path: '/rooms',
     name: 'conference_start_page',
-    builder: (context, state) => const StartPage(),
+    // builder: (context, state) => const StartPage(),
+    builder:(context, state) => const StartPage(),
   ),
   GoRoute(
     path: '/video_conf',
