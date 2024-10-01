@@ -2,31 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class StartPage extends StatelessWidget {
-  const StartPage({super.key});
+  final TextEditingController channelController = TextEditingController();
+
+  StartPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return SafeArea(
+      child: Scaffold(
         appBar: AppBar(
-      title: const Text(
-        'Video conf start page',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+          leading: IconButton(
+            onPressed: () {
+              context.go('/options');
+            },
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
+          title: const Text(
+            'Create the video conference',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          centerTitle: true,
+          backgroundColor: Colors.blueAccent,
+          elevation: 0,
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 300,
+              child: TextField(
+                controller: channelController,
+                decoration: const InputDecoration(
+                  labelText: 'Enter a 8 digit number',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 70,
+            ),
+            Center(
+              child: ElevatedButton(
+                onPressed: () =>
+                    context.go('/video_conf', extra: channelController.text),
+                child: const Text('Create video conference'),
+              ),
+            ),
+          ],
         ),
       ),
-      centerTitle: true,
-      backgroundColor: Colors.blueAccent,
-      elevation: 0,
-    ),
-    body:Center(
-      child: ElevatedButton( 
-        onPressed: () => context.go('/video_conf'),
-        child: const Text('Start the video conference'),
-      ),
-    ),
-    
     );
   }
 }

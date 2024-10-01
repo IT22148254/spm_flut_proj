@@ -41,19 +41,19 @@ extension GetItInjectableX on _i174.GetIt {
       environmentFilter,
     );
     final agoraModule = _$AgoraModule();
+    final conferenceRoomServiceModule = _$ConferenceRoomServiceModule();
     final firebaseAuthModule = _$FirebaseAuthModule();
     final firestoreModule = _$FirestoreModule();
     final goRouterModule = _$GoRouterModule();
     final loggerModule = _$LoggerModule();
-    final conferenceRoomServiceModule = _$ConferenceRoomServiceModule();
     final userServiceModule = _$UserServiceModule();
     gh.lazySingleton<_i554.AgoraClient>(() => agoraModule.client);
+    gh.lazySingleton<_i401.ConferenceRoomService>(
+        () => conferenceRoomServiceModule.conferenceRoomService);
     gh.lazySingleton<_i59.FirebaseAuth>(() => firebaseAuthModule.firebaseAuth);
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firestoreModule.firestore);
     gh.lazySingleton<_i583.GoRouter>(() => goRouterModule.goRouter);
     gh.lazySingleton<_i974.Logger>(() => loggerModule.logger);
-    gh.lazySingleton<_i401.ConferenceRoomService>(
-        () => conferenceRoomServiceModule.conferenceRoomService);
     gh.lazySingleton<_i990.UserService>(() => userServiceModule.userService);
     gh.lazySingleton<_i38.MyAgoraService>(() => _i38.MyAgoraServiceImpl());
     gh.lazySingleton<_i377.AuthService>(() => _i377.FirebaseAuthService(
@@ -66,6 +66,8 @@ extension GetItInjectableX on _i174.GetIt {
 
 class _$AgoraModule extends _i549.AgoraModule {}
 
+class _$ConferenceRoomServiceModule extends _i971.ConferenceRoomServiceModule {}
+
 class _$FirebaseAuthModule extends _i32.FirebaseAuthModule {}
 
 class _$FirestoreModule extends _i431.FirestoreModule {}
@@ -73,7 +75,5 @@ class _$FirestoreModule extends _i431.FirestoreModule {}
 class _$GoRouterModule extends _i956.GoRouterModule {}
 
 class _$LoggerModule extends _i987.LoggerModule {}
-
-class _$ConferenceRoomServiceModule extends _i971.ConferenceRoomServiceModule {}
 
 class _$UserServiceModule extends _i695.UserServiceModule {}
