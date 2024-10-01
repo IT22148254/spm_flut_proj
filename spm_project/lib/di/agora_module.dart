@@ -9,7 +9,7 @@ abstract class AgoraModule {
           appId: '398f9cfc09ab44d187c99814699f8bf2',
           channelName: 'praboth',
           tempToken:
-              '007eJxTYLD+darrT4SJGLf59d6Zf5cf2KiVqF2Ylr/sqMDT8y93r/dXYDC2tEizTE5LNrBMTDIxSTG0ME+2tLQwNDGztEyzSEozumL9OK0hkJFh8kEVZkYGCATx2RkKihKT8ksyGBgAQ7witA==',
+              '007eJxTYGBd9oN3n/Ocyj1FPP1GjZtti1XXrm0scuHfKaulb7JnRZkCg7GlRZplclqygWVikolJiqGFebKlpYWhiZmlZZpFUprRuejfaQ2BjAyXt09gYIRCEJ+doaAoMSm/JIOBAQAzeh/k',
         ),
         enabledPermission: [Permission.camera, Permission.microphone],
       );
