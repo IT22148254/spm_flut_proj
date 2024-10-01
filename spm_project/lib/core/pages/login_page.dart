@@ -87,7 +87,7 @@ class LoginPage extends StatelessWidget {
                     if (userCredential != null) {
                       userService.addUser();
                       if (context.mounted) {
-                        context.go('/rooms');
+                        context.go('/');
                       }
                     }
                   },
@@ -100,7 +100,7 @@ class LoginPage extends StatelessWidget {
                       if (userCredential != null) {
                         userService.addUser();
                         if (context.mounted) {
-                          context.go('/rooms');
+                          context.go('/');
                         }
                       }
                     },
