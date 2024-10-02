@@ -5,6 +5,7 @@ import 'package:spm_project/core/services/speech_to_text_service.dart';
 import 'dart:ui';
 import 'package:logger/logger.dart';
 import 'package:spm_project/di/injectable.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -17,6 +18,7 @@ class _HomepageState extends State<Homepage> {
   late MySpeechToTextService _speechService;
   Logger logger = getit<Logger>();
   User? user = FirebaseAuth.instance.currentUser;
+  final audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -238,17 +240,20 @@ class _HomepageState extends State<Homepage> {
   }
 
   void startListeningAndNavigate() async {
-    await _speechService.startListening((String result) {
-      logger.i(result);
-      if (result.toLowerCase().contains('classroom')) {
-        context.go('/options');
-      }
-      if (result.toLowerCase().contains('quiz')) {
-        context.go('/quiz');
-      }
-      if (result.toLowerCase().contains('note')) {
-        context.go('/notes');
-      }
-    });
-  }
+  await _speechService.startListening((String result) async {
+    logger.i(result);
+    if (result.toLowerCase().contains('classroom')) {
+      context.go('/options');
+    }
+    if (result.toLowerCase().contains('question')) {
+      context.go('/quiz');
+    }
+    if (result.toLowerCase().contains('note')) {
+      context.go('/notes');
+    }
+    if (result.toLowerCase().contains('instruct')) {
+      await audioPlayer.play(AssetSource('sounds/instructions.mp3'));  
+    }
+  });
+}
 }
