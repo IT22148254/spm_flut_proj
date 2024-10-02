@@ -47,26 +47,48 @@ class _HomepageState extends State<Homepage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: screenSize.height * 0.1,
+                          GestureDetector(
+                            onTap:(){context.go('/');},
+                            child: Container(
+                              height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.go('/quiz');
-                              },
-                              style: const ButtonStyle(),
-                              child: const Text("Educational quiz"),
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Feature 4",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            height: screenSize.height * 0.1,
+                          GestureDetector(
+                            onTap:(){context.go('/quiz');},
+                            child: Container(
+                              height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.go('/admin');
-                              },
-                              style: const ButtonStyle(),
-                              child: const Text("quiz admin db"),
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Quiz",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -75,26 +97,48 @@ class _HomepageState extends State<Homepage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          SizedBox(
-                            height: screenSize.height * 0.1,
+                          GestureDetector(
+                            onTap:(){context.go('/notes');},
+                            child: Container(
+                              height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.go('/notes');
-                              },
-                              style: const ButtonStyle(),
-                              child: const Text("Voice notes"),
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Notes",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          SizedBox(
-                            height: screenSize.height * 0.1,
+                          GestureDetector(
+                            onTap:(){context.go('/options');},
+                            child: Container(
+                              height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                context.go('/options');
-                              },
-                              style: const ButtonStyle(),
-                              child: const Text("Classroom"),
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Class-room",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],

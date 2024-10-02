@@ -49,10 +49,15 @@ class _RoomOptionsPageState extends State<RoomOptionsPage> {
         result = '';
       }
 
-      if(_isOverlayVisible){
-        result = result.replaceAll(RegExp(r'[^0-9]'), '');
-        _roomNumberController.text = result; 
-        _joinRoom();
+      // if(_isOverlayVisible){
+      //   result = result.replaceAll(RegExp(r'[^0-9]'), '');
+      //   _roomNumberController.text = result; 
+      //   _joinRoom();
+      // }
+
+      if (result.toLowerCase().contains('home')) {
+        context.go('/');
+        result = '';
       }
     });
   }
