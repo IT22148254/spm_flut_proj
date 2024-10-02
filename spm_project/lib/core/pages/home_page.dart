@@ -73,9 +73,9 @@ void initState() {
                             height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {context.go('/notes');},
                               style: const ButtonStyle(),
-                              child: const Text("First feature"),
+                              child: const Text("Voice notes"),
                             ),
                           ),
                           SizedBox(
