@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
+import 'package:spm_project/core/services/speech_to_text_service.dart';
+import 'package:spm_project/di/injectable.dart';
 
 class RoomOptionsPage extends StatefulWidget {
   const RoomOptionsPage({super.key});
@@ -9,21 +12,49 @@ class RoomOptionsPage extends StatefulWidget {
 }
 
 class _RoomOptionsPageState extends State<RoomOptionsPage> {
-  bool _isOverlayVisible = false; 
-  final TextEditingController _roomNumberController = TextEditingController(); 
+  bool _isOverlayVisible = false;
+  final TextEditingController _roomNumberController = TextEditingController();
+  late MySpeechToTextService _speechService;
+  Logger logger = getit<Logger>();
+
+  @override
+  void initState() {
+    super.initState();
+    _speechService = getit<MySpeechToTextService>();
+    _speechService.initSpeech();
+  }
 
   void _toggleOverlay() {
     setState(() {
-      _isOverlayVisible = !_isOverlayVisible; 
+      _isOverlayVisible = !_isOverlayVisible;
     });
   }
 
   void _joinRoom() {
     String roomNumber = _roomNumberController.text;
     if (roomNumber.isNotEmpty) {
-      context.go('/video_conf', extra: roomNumber); 
-      _toggleOverlay(); 
+      context.go('/video_conf', extra: roomNumber);
+      _toggleOverlay();
     }
+  }
+
+  void startListening()async {
+    await _speechService.startListening((String result) {
+      if (result.toLowerCase().contains('create')) {
+        context.go('/room_create');
+        result = '';
+      }
+      if (result.toLowerCase().contains('join')) {
+        _toggleOverlay();
+        result = '';
+      }
+
+      if(_isOverlayVisible){
+        result = result.replaceAll(RegExp(r'[^0-9]'), '');
+        _roomNumberController.text = result; 
+        _joinRoom();
+      }
+    });
   }
 
   @override
@@ -33,6 +64,12 @@ class _RoomOptionsPageState extends State<RoomOptionsPage> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () {
+              context.go('/');
+            },
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
           centerTitle: true,
           title: const Text(
             "Room Options",
@@ -46,7 +83,7 @@ class _RoomOptionsPageState extends State<RoomOptionsPage> {
           backgroundColor: Colors.blueAccent,
           elevation: 0,
         ),
-        body: Stack( 
+        body: Stack(
           children: [
             Center(
               child: SingleChildScrollView(
@@ -114,6 +151,9 @@ class _RoomOptionsPageState extends State<RoomOptionsPage> {
                         context.go('/room_create');
                       },
                       onDoubleTap: _toggleOverlay,
+                      onLongPress: () {
+                        startListening();
+                      },
                       child: Container(
                         height: screenSize.height * 0.38,
                         width: screenSize.width * 0.96,
@@ -145,12 +185,14 @@ class _RoomOptionsPageState extends State<RoomOptionsPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Container(
-                        height: screenSize.height * 0.5, // Adjust height for overlay
+                        height: screenSize.height *
+                            0.5, // Adjust height for overlay
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: const BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(0)),
+                          borderRadius:
+                              BorderRadius.vertical(bottom: Radius.circular(0)),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,

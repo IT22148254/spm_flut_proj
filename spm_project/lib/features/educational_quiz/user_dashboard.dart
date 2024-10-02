@@ -3,6 +3,7 @@ import 'package:flutter_tts/flutter_tts.dart'; // Import the flutter_tts package
 import 'database_helper.dart'; // Import your database helper
 import 'question.dart'; // Import your Question model
 import 'score_screen.dart'; // Import the ScoreScreen
+import 'package:go_router/go_router.dart';
 
 class UserDashboard extends StatefulWidget {
   const UserDashboard({super.key});
@@ -143,6 +144,12 @@ class _UserDashboardState extends State<UserDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              context.go('/');
+            },
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
         title: const Text("User Dashboard"),
         automaticallyImplyLeading: true,
       ),

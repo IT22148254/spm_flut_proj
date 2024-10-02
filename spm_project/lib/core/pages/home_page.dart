@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:spm_project/core/services/speech_to_text_service.dart';
@@ -15,13 +16,14 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   late MySpeechToTextService _speechService;
   Logger logger = getit<Logger>();
+  UserCredential? userCredential;
 
   @override
-void initState() {
-  super.initState();
-  _speechService = getit<MySpeechToTextService>();
-  _speechService.initSpeech(); 
-}
+  void initState() {
+    super.initState();
+    _speechService = getit<MySpeechToTextService>();
+    _speechService.initSpeech();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +51,9 @@ void initState() {
                             height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
                             child: ElevatedButton(
-                              onPressed: () {context.go('/quiz');},
+                              onPressed: () {
+                                context.go('/quiz');
+                              },
                               style: const ButtonStyle(),
                               child: const Text("Educational quiz"),
                             ),
@@ -58,7 +62,9 @@ void initState() {
                             height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
                             child: ElevatedButton(
-                              onPressed: () {context.go('/quiz_admin');},
+                              onPressed: () {
+                                context.go('/admin');
+                              },
                               style: const ButtonStyle(),
                               child: const Text("quiz admin db"),
                             ),
@@ -73,7 +79,9 @@ void initState() {
                             height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
                             child: ElevatedButton(
-                              onPressed: () {context.go('/notes');},
+                              onPressed: () {
+                                context.go('/notes');
+                              },
                               style: const ButtonStyle(),
                               child: const Text("Voice notes"),
                             ),
@@ -86,7 +94,7 @@ void initState() {
                                 context.go('/options');
                               },
                               style: const ButtonStyle(),
-                              child: const Text("Interactive classroom"),
+                              child: const Text("Classroom"),
                             ),
                           ),
                         ],
@@ -96,8 +104,13 @@ void initState() {
                 ),
                 GestureDetector(
                   onLongPress: () {
-                    showOverlay(context);
-                    startListeningAndNavigate();
+                    if (userCredential != null &&
+                        userCredential!.user!.email == 'admin@gmail.com') {
+                      context.go('/admin');
+                    } else {
+                      showOverlay(context);
+                      startListeningAndNavigate();
+                    }
                   },
                   child: Container(
                     height: screenSize.height * 0.41,
@@ -142,50 +155,33 @@ void initState() {
   }
 
   void showOverlay(BuildContext context) {
-    Size screenSize = MediaQuery.of(context).size;
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
+        // Use a unique key to ensure that we can close this dialog later
+        final dialogContext = context;
+
+        // Automatically close the dialog after 20 seconds
+        Future.delayed(const Duration(seconds: 6), () {
+          if (dialogContext.mounted) {
+            Navigator.of(dialogContext).pop(); // Close the dialog
+          }
+        });
+
         return Stack(
           children: [
             // Blurred background
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
               child: Container(
-                color: Colors.black.withOpacity(0.5), // Semi-transparent background
+                color: Colors.black
+                    .withOpacity(0.5), // Semi-transparent background
               ),
             ),
             // Overlay content
             Center(
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                width: screenSize.width * 0.8,
-                height: screenSize.height * 0.5,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Overlay Content",
-                      style: TextStyle(
-                        fontSize: 24.0,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xd0ff0000),
-                        fontFamily: 'monospace',
-                        decoration: TextDecoration.underline,
-                        decorationColor: Color(0xffffff00),
-                        decorationStyle: TextDecorationStyle.double,
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    Text("This layout appears on long press"),
-                  ],
-                ),
-              ),
+              child: Image.asset('assets/images/bird_logo.png'),
             ),
           ],
         );
@@ -198,6 +194,12 @@ void initState() {
       logger.i(result);
       if (result.toLowerCase().contains('classroom')) {
         context.go('/options');
+      }
+      if (result.toLowerCase().contains('quiz')) {
+        context.go('/quiz');
+      }
+      if (result.toLowerCase().contains('note')) {
+        context.go('/notes');
       }
     });
   }

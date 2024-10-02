@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 import 'package:open_file/open_file.dart';
+import 'package:pdf/widgets.dart' as pw;
 import 'database_helper.dart';
 import 'question.dart';
 
@@ -28,27 +29,45 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
     });
   }
 
-  Future<void> _generateReport(List<Question> questions) async {
+  Future<void> _generatePdfReport(List<Question> questions) async {
     try {
-      StringBuffer buffer = StringBuffer();
-      buffer.writeln('Question,Option 1,Option 2,Correct Answer');
+      final pdf = pw.Document();
 
-      for (var question in questions) {
-        buffer.writeln(
-          '"${question.question}","${question.answer1}","${question.answer2}","${question.correctAnswer}"',
-        );
-      }
+      // Add a title and content to the PDF
+      pdf.addPage(
+        pw.Page(
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Text(
+                  'Questions Report',
+                  style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold),
+                ),
+                pw.SizedBox(height: 20),
+                pw.Table.fromTextArray(
+                  headers: ['Question', 'Option 1', 'Option 2', 'Correct Answer'],
+                  data: questions.map((q) {
+                    return [q.question, q.answer1, q.answer2, q.correctAnswer];
+                  }).toList(),
+                ),
+              ],
+            );
+          },
+        ),
+      );
 
+      // Save the PDF to a file
       final directory = await getApplicationDocumentsDirectory();
-      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-'); // Ensure valid filename
-      final filePath = '${directory.path}/questions_report_$timestamp.csv';
-
+      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+      final filePath = '${directory.path}/questions_report_$timestamp.pdf';
       final file = File(filePath);
-      await file.writeAsString(buffer.toString());
+      await file.writeAsBytes(await pdf.save());
 
+      // Show a message and provide an option to open the file
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Report generated at: $filePath'),
+          content: Text('PDF report generated at: $filePath'),
           action: SnackBarAction(
             label: 'Open',
             onPressed: () async {
@@ -60,9 +79,8 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
     } catch (e, stacktrace) {
       print('Error: $e');
       print('Stacktrace: $stacktrace');
-      
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to generate report: $e')),
+        SnackBar(content: Text('Failed to generate PDF report: $e')),
       );
     }
   }
@@ -78,11 +96,16 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
             future: _questionsFuture,
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return IconButton(
-                  icon: const Icon(Icons.download),
-                  onPressed: () {
-                    _generateReport(snapshot.data!);
-                  },
+                return Row(
+                  children: [
+                    Text("Total: ${snapshot.data!.length}"), // Display the total count
+                    IconButton(
+                      icon: const Icon(Icons.download),
+                      onPressed: () {
+                        _generatePdfReport(snapshot.data!);
+                      },
+                    ),
+                  ],
                 );
               }
               return Container();
@@ -101,46 +124,52 @@ class _ViewQuestionScreenState extends State<ViewQuestionScreen> {
             return const Center(child: Text('No questions available.'));
           } else {
             List<Question> questions = snapshot.data!;
-            return ListView.builder(
-              itemCount: questions.length,
-              itemBuilder: (context, index) {
-                Question question = questions[index];
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: Card(
-                    elevation: 4,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            question.question,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+            return Column(
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: questions.length,
+                    itemBuilder: (context, index) {
+                      Question question = questions[index];
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        child: Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  question.question,
+                                  style: const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Text('1. ${question.answer1}'),
+                                Text('2. ${question.answer2}'),
+                                const SizedBox(height: 10),
+                                Text(
+                                  'Correct Answer: ${question.correctAnswer}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          const SizedBox(height: 10),
-                          Text('1. ${question.answer1}'),
-                          Text('2. ${question.answer2}'),
-                          const SizedBox(height: 10),
-                          Text(
-                            'Correct Answer: ${question.correctAnswer}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
         },

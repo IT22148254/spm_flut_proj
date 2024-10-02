@@ -15,6 +15,7 @@ import 'package:open_file/open_file.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 // import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 class VoiceController extends StatefulWidget {
   const VoiceController({super.key});
@@ -382,6 +383,12 @@ class _VoiceControllerState extends State<VoiceController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              context.go('/');
+            },
+            icon: const Icon(Icons.arrow_back_rounded),
+          ),
         backgroundColor: const Color.fromARGB(255, 25, 73, 156),
         title: const Text(
           'Voice Notes',
