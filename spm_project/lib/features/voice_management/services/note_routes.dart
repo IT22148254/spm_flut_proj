@@ -5,6 +5,6 @@ final notesRoute = [
   GoRoute(
     path: '/notes',
     name: 'notes',
-    builder: (context, state) => VoiceController(),
+    builder: (context, state) => const VoiceController(),
   ),
 ];

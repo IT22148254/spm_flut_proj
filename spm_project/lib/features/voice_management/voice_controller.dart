@@ -9,7 +9,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:vibration/vibration.dart';
-import 'package:pdf/pdf.dart';
+//import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -27,7 +27,7 @@ class _VoiceControllerState extends State<VoiceController> {
   final _record = AudioRecorder();
   final TextEditingController _controller = TextEditingController();
   final AudioPlayer _audioPlayer = AudioPlayer();
-  stt.SpeechToText _speech = stt.SpeechToText();
+  final stt.SpeechToText _speech = stt.SpeechToText();
   final AudioPlayer _alertPlayer = AudioPlayer();
 
   Timer? _timer;
