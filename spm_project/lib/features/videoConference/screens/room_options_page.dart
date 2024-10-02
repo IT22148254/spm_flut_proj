@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class RoomOptionsPage extends StatelessWidget {
+class RoomOptionsPage extends StatefulWidget {
   const RoomOptionsPage({super.key});
+
+  @override
+  State<RoomOptionsPage> createState() => _RoomOptionsPageState();
+}
+
+class _RoomOptionsPageState extends State<RoomOptionsPage> {
+  bool _isOverlayVisible = false; // Track overlay visibility
+  final TextEditingController _roomNumberController = TextEditingController(); // Controller for text input
+
+  void _toggleOverlay() {
+    setState(() {
+      _isOverlayVisible = !_isOverlayVisible; // Toggle overlay visibility
+    });
+  }
+
+  void _joinRoom() {
+    String roomNumber = _roomNumberController.text;
+    if (roomNumber.isNotEmpty) {
+      context.go('/video_conf', extra: roomNumber); // Navigate to video conference page
+      _toggleOverlay(); // Hide the overlay after joining
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,60 +46,87 @@ class RoomOptionsPage extends StatelessWidget {
           backgroundColor: Colors.blueAccent,
           elevation: 0,
         ),
-        body: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                height: screenSize.height * 0.5,
-                padding: const EdgeInsets.symmetric(vertical: 30),
+        body: Stack( // Use a Stack to overlay widgets
+          children: [
+            Center(
+              child: SingleChildScrollView(
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        context.go('/room_create');
-                      },
-                      child: Container(
-                        height: screenSize.height * 0.10,
-                        width: screenSize.width * 0.8,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Create a Room",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
+                    Container(
+                      height: screenSize.height * 0.5,
+                      padding: const EdgeInsets.symmetric(vertical: 30),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              context.go('/room_create');
+                            },
+                            child: Container(
+                              height: screenSize.height * 0.10,
+                              width: screenSize.width * 0.8,
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Create a Room",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: _toggleOverlay, // Show overlay on tap
+                            child: Container(
+                              height: screenSize.height * 0.10,
+                              width: screenSize.width * 0.8,
+                              decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  "Join a Room",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.5,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     GestureDetector(
                       onTap: () {
-                        context.go('/video_conf', extra: "");
+                        context.go('/room_create');
                       },
+                      onDoubleTap: _toggleOverlay,
                       child: Container(
-                        height: screenSize.height * 0.10,
-                        width: screenSize.width * 0.8,
+                        height: screenSize.height * 0.38,
+                        width: screenSize.width * 0.96,
                         decoration: BoxDecoration(
-                          color: Colors.blueAccent,
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(24),
+                          color: Colors.grey[300],
                         ),
                         child: const Center(
                           child: Text(
-                            "Join a Room",
+                            "Tapping controller area",
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 1.5,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
                         ),
@@ -86,33 +135,54 @@ class RoomOptionsPage extends StatelessWidget {
                   ],
                 ),
               ),
+            ),
+            if (_isOverlayVisible) // Show overlay if visible
               GestureDetector(
-                onTap: () {
-                  context.go('/room_create');
-                },
-                onDoubleTap: () {
-                  context.go('/video_conf', extra: "");
-                },
+                onTap: _toggleOverlay, // Hide overlay on tap
                 child: Container(
-                  height: screenSize.height * 0.38,
-                  width: screenSize.width * 0.96,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: Colors.grey[300],
-                  ),
-                  child: const Center(
-                    child: Text(
-                      "Tapping controller area",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                  color: Colors.black54, // Background color for overlay
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        height: screenSize.height * 0.5, // Adjust height for overlay
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.vertical(bottom: Radius.circular(0)),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Text(
+                              "Enter Room Number",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextField(
+                              controller: _roomNumberController,
+                              decoration: const InputDecoration(
+                                labelText: 'Room Number',
+                                border: OutlineInputBorder(),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              onPressed: _joinRoom, // Join room function
+                              child: const Text("Enter"),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+          ],
         ),
       ),
     );

@@ -7,7 +7,7 @@ final conferenceRoutes = [
   GoRoute(
     path: '/room_create',
     name: 'conference_create_page',
-    builder:(context, state) => StartPage(),
+    builder:(context, state) => const StartPage(),
   ),
   GoRoute(
     path: '/video_conf',
