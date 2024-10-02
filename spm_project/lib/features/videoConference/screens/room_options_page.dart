@@ -9,20 +9,20 @@ class RoomOptionsPage extends StatefulWidget {
 }
 
 class _RoomOptionsPageState extends State<RoomOptionsPage> {
-  bool _isOverlayVisible = false; // Track overlay visibility
-  final TextEditingController _roomNumberController = TextEditingController(); // Controller for text input
+  bool _isOverlayVisible = false; 
+  final TextEditingController _roomNumberController = TextEditingController(); 
 
   void _toggleOverlay() {
     setState(() {
-      _isOverlayVisible = !_isOverlayVisible; // Toggle overlay visibility
+      _isOverlayVisible = !_isOverlayVisible; 
     });
   }
 
   void _joinRoom() {
     String roomNumber = _roomNumberController.text;
     if (roomNumber.isNotEmpty) {
-      context.go('/video_conf', extra: roomNumber); // Navigate to video conference page
-      _toggleOverlay(); // Hide the overlay after joining
+      context.go('/video_conf', extra: roomNumber); 
+      _toggleOverlay(); 
     }
   }
 
@@ -46,7 +46,7 @@ class _RoomOptionsPageState extends State<RoomOptionsPage> {
           backgroundColor: Colors.blueAccent,
           elevation: 0,
         ),
-        body: Stack( // Use a Stack to overlay widgets
+        body: Stack( 
           children: [
             Center(
               child: SingleChildScrollView(
