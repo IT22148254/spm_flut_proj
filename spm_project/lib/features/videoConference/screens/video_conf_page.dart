@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:spm_project/di/injectable.dart';
 import 'package:spm_project/features/videoConference/services/my_agora_service.dart';
-import 'package:flutter/services.dart'; // For haptic feedback
-import 'package:audioplayers/audioplayers.dart'; // For playing audio feedback
+import 'package:flutter/services.dart'; 
+import 'package:audioplayers/audioplayers.dart'; 
 import 'dart:math';
 
 class VideoConferencePage extends StatefulWidget {
@@ -58,24 +58,6 @@ class VideoConferencePageState extends State<VideoConferencePage> {
         await _client.engine.enableLocalVideo(false);
         await _audioPlayer.play(AssetSource('sounds/camera_disable.mp3'));
       }
-      // showDialog(
-      //   // ignore: use_build_context_synchronously
-      //   context: context,
-      //   builder: (BuildContext context) {
-      //     return AlertDialog(
-      //       title: const Text('Alert'),
-      //       content: const Text('Camera and microphone disabled !'),
-      //       actions: [
-      //         TextButton(
-      //           child: const Text('OK'),
-      //           onPressed: () {
-      //             Navigator.of(context).pop();
-      //           },
-      //         ),
-      //       ],
-      //     );
-      //   },
-      // );
     } catch (e) {
       _logger.e("Failed to toggle camera and microphone");
     }
@@ -86,43 +68,9 @@ class VideoConferencePageState extends State<VideoConferencePage> {
       HapticFeedback.mediumImpact();
       await _client.engine.enableLocalVideo(!_isCameraOff);
       if (_isCameraOff) {
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: const Text('Alert'),
-        //       content: const Text('Camera is disabled !'),
-        //       actions: [
-        //         TextButton(
-        //           child: const Text('OK'),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
-        await _audioPlayer.play(AssetSource('sounds/camera_disable.mp3'));
-      } else {
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: const Text('Alert'),
-        //       content: const Text('Camera is enabled !'),
-        //       actions: [
-        //         TextButton(
-        //           child: const Text('OK'),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
         await _audioPlayer.play(AssetSource('sounds/camera_enabled.mp3'));
+      } else {
+        await _audioPlayer.play(AssetSource('sounds/camera_disable.mp3'));
       }
     } catch (e) {
       _logger.e("Failed to toggle camera $e");
@@ -134,52 +82,14 @@ class VideoConferencePageState extends State<VideoConferencePage> {
       HapticFeedback.mediumImpact();
       await _client.engine.enableLocalAudio(!_isMicrophoneOff);
       if (_isMicrophoneOff) {
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: const Text('Alert'),
-        //       content: const Text('Microphone is disabled !'),
-        //       actions: [
-        //         TextButton(
-        //           child: const Text('OK'),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
-        await _audioPlayer.play(AssetSource('sounds/muted.mp3'));
-      } else {
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: const Text('Alert'),
-        //       content: const Text('Microphone is enabled !'),
-        //       actions: [
-        //         TextButton(
-        //           child: const Text('OK'),
-        //           onPressed: () {
-        //             Navigator.of(context).pop();
-        //           },
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
         await _audioPlayer.play(AssetSource('sounds/unmute.mp3'));
+      } else {
+        await _audioPlayer.play(AssetSource('sounds/muted.mp3'));
       }
     } on Exception catch (e) {
       _logger.e("Failed to toggle microphone $e");
     }
   }
-
-  // Future<void> _playAudioFeedback(String fileName) async {
-  //   await _audioPlayer.play(AssetSource(fileName));
-  // }
 
   @override
   void initState() {

@@ -245,7 +245,7 @@ class _HomepageState extends State<Homepage> {
     if (result.toLowerCase().contains('classroom')) {
       context.go('/options');
     }
-    if (result.toLowerCase().contains('question')) {
+    if (result.toLowerCase().contains('game')) {
       context.go('/quiz');
     }
     if (result.toLowerCase().contains('note')) {
