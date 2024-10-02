@@ -16,7 +16,7 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
   late MySpeechToTextService _speechService;
   Logger logger = getit<Logger>();
-  UserCredential? userCredential;
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -148,12 +148,16 @@ class _HomepageState extends State<Homepage> {
                 ),
                 GestureDetector(
                   onLongPress: () {
-                    if (userCredential != null &&
-                        userCredential!.user!.email == 'admin@gmail.com') {
-                      context.go('/admin');
+                    if (user != null) {
+                      logger.i(user!.email); 
+                      if (user!.email == 'admin@gmail.com') {
+                        context.go('/admin');
+                      } else {
+                        showOverlay(context);
+                        startListeningAndNavigate();
+                      }
                     } else {
-                      showOverlay(context);
-                      startListeningAndNavigate();
+                      logger.i('No user is logged in');
                     }
                   },
                   child: Container(
