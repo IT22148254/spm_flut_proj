@@ -1,10 +1,43 @@
+import 'dart:math'; // Import for generating random numbers
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart'; // Import for Clipboard
+import 'package:share_plus/share_plus.dart'; // Import for sharing functionality
 
-class StartPage extends StatelessWidget {
+class StartPage extends StatefulWidget {
+  const StartPage({super.key});
+
+  @override
+  State<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends State<StartPage> {
   final TextEditingController channelController = TextEditingController();
+  String _randomNumber = '';
 
-  StartPage({super.key});
+  @override
+  void initState() {
+    super.initState();
+    _generateRandomNumber(); // Generate random number on init
+  }
+
+  void _generateRandomNumber() {
+    final random = Random();
+    _randomNumber = (random.nextInt(90000000) + 10000000).toString(); // Generate 8-digit number
+    channelController.text = _randomNumber; // Set the text field to the generated number
+    setState(() {}); // Update UI
+  }
+
+  void _copyToClipboard() {
+    Clipboard.setData(ClipboardData(text: _randomNumber));
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Copied to clipboard!')),
+    );
+  }
+
+  void _shareNumber() {
+    Share.share('Here is my room number: $_randomNumber'); // Share the number
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +70,9 @@ class StartPage extends StatelessWidget {
               width: 300,
               child: TextField(
                 controller: channelController,
+                readOnly: true, // Make the text field read-only
                 decoration: const InputDecoration(
-                  labelText: 'Enter a 8 digit number',
+                  labelText: 'Generated 8 digit number',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -48,10 +82,20 @@ class StartPage extends StatelessWidget {
             ),
             Center(
               child: ElevatedButton(
-                onPressed: () =>
-                    context.go('/video_conf', extra: channelController.text),
+                onPressed: () {
+                  context.go('/video_conf', extra: channelController.text);
+                },
                 child: const Text('Create video conference'),
               ),
+            ),
+            const SizedBox(height: 20), // Add some space
+            ElevatedButton(
+              onPressed: () {
+                _copyToClipboard();
+                _shareNumber();
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+              child: const Text('Share Room Number'),
             ),
           ],
         ),
