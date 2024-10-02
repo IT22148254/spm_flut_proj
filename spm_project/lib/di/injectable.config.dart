@@ -15,8 +15,10 @@ import 'package:get_it/get_it.dart' as _i174;
 import 'package:go_router/go_router.dart' as _i583;
 import 'package:injectable/injectable.dart' as _i526;
 import 'package:logger/logger.dart' as _i974;
+import 'package:speech_to_text/speech_to_text.dart' as _i941;
 
 import '../core/services/auth_service.dart' as _i377;
+import '../core/services/speech_to_text_service.dart' as _i755;
 import '../core/services/user_service.dart' as _i990;
 import '../features/videoConference/services/conference_room_service.dart'
     as _i401;
@@ -27,6 +29,7 @@ import 'firebase_auth_module.dart' as _i32;
 import 'firestore_module.dart' as _i431;
 import 'go_router_module.dart' as _i956;
 import 'logger_module.dart' as _i987;
+import 'stt_module.dart' as _i766;
 import 'user_service_module.dart' as _i695;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -46,6 +49,7 @@ extension GetItInjectableX on _i174.GetIt {
     final firestoreModule = _$FirestoreModule();
     final goRouterModule = _$GoRouterModule();
     final loggerModule = _$LoggerModule();
+    final speechToTextModule = _$SpeechToTextModule();
     final userServiceModule = _$UserServiceModule();
     gh.lazySingleton<_i554.AgoraClient>(() => agoraModule.client);
     gh.lazySingleton<_i401.ConferenceRoomService>(
@@ -54,8 +58,11 @@ extension GetItInjectableX on _i174.GetIt {
     gh.lazySingleton<_i974.FirebaseFirestore>(() => firestoreModule.firestore);
     gh.lazySingleton<_i583.GoRouter>(() => goRouterModule.goRouter);
     gh.lazySingleton<_i974.Logger>(() => loggerModule.logger);
+    gh.lazySingleton<_i941.SpeechToText>(() => speechToTextModule.speechToText);
     gh.lazySingleton<_i990.UserService>(() => userServiceModule.userService);
     gh.lazySingleton<_i38.MyAgoraService>(() => _i38.MyAgoraServiceImpl());
+    gh.lazySingleton<_i755.MySpeechToTextService>(
+        () => _i755.MySpeechToTextServiceImpl());
     gh.lazySingleton<_i377.AuthService>(() => _i377.FirebaseAuthService(
           gh<_i59.FirebaseAuth>(),
           gh<_i974.Logger>(),
@@ -75,5 +82,7 @@ class _$FirestoreModule extends _i431.FirestoreModule {}
 class _$GoRouterModule extends _i956.GoRouterModule {}
 
 class _$LoggerModule extends _i987.LoggerModule {}
+
+class _$SpeechToTextModule extends _i766.SpeechToTextModule {}
 
 class _$UserServiceModule extends _i695.UserServiceModule {}
