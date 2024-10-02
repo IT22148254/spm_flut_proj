@@ -49,18 +49,18 @@ void initState() {
                             height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
                             child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {context.go('/quiz');},
                               style: const ButtonStyle(),
-                              child: const Text("First feature"),
+                              child: const Text("Educational quiz"),
                             ),
                           ),
                           SizedBox(
                             height: screenSize.height * 0.1,
                             width: screenSize.width * 0.4,
                             child: ElevatedButton(
-                              onPressed: () {context.go('/notes');},
+                              onPressed: () {context.go('/quiz_admin');},
                               style: const ButtonStyle(),
-                              child: const Text("Voice notes"),
+                              child: const Text("quiz admin db"),
                             ),
                           ),
                         ],
