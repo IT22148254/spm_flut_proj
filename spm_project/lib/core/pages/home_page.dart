@@ -209,29 +209,24 @@ class _HomepageState extends State<Homepage> {
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
-        // Use a unique key to ensure that we can close this dialog later
         final dialogContext = context;
-
-        // Automatically close the dialog after 20 seconds
         Future.delayed(const Duration(seconds: 6), () {
           if (dialogContext.mounted) {
-            Navigator.of(dialogContext).pop(); // Close the dialog
+            Navigator.of(dialogContext).pop();
           }
         });
 
         return Stack(
           children: [
-            // Blurred background
             BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 5.0, sigmaY: 5.0),
               child: Container(
                 color: Colors.black
-                    .withOpacity(0.5), // Semi-transparent background
+                    .withOpacity(0.5), 
               ),
             ),
-            // Overlay content
             Center(
-              child: Image.asset('assets/images/bird_logo.png'),
+              child: Image.asset('assets/images/mic-logo-vec.png'),
             ),
           ],
         );
